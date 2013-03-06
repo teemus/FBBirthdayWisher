@@ -103,17 +103,20 @@ FBBirthdayWisher.writeBirthdayMessages = function() {
     }
 
     for (var i=0; i < birthdays.profileIDs.length; i++) {
-		window.alert("Wishing " + birthdays.firstNames[i] + "...");
+		console.log("Wishing " + birthdays.firstNames[i] + "...");
 		var fields = birthdays.fields;
 		fields.xhpc_targetid = birthdays.profileIDs[i];
 		fields.xhpc_message = FBBirthdayWisher.message + ", " + birthdays.firstNames[i] + "!";
 		var postData = FBBirthdayWisher.buildPostData(fields);
 		console.log(postData);
-	 	var req = new XMLHttpRequest();
-		req.onreadystatechange = processStateChange;
-		req.open("POST", "/ajax/updatestatus.php", true);
-		req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		req.send(postData);
+		var wishFriend = window.confirm("Wish " + birthdays.firstNames[i] + "?");
+		if (wishFriend) {
+	 	    var req = new XMLHttpRequest();
+		    req.onreadystatechange = processStateChange;
+		    req.open("POST", "/ajax/updatestatus.php", true);
+		    req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		    req.send(postData);
+		}
 	}
 };
 FBBirthdayWisher.writeBirthdayMessages();
