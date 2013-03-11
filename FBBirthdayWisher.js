@@ -86,7 +86,7 @@ FBBirthdayWisher.writeBirthdayMessages = function() {
 				console.log("Response: ", req.statusText);
 	        }
 	    }	
-	}
+	};
 	
 	var birthdays = FBBirthdayWisher.getBirthdays();
 	console.log("birthdays:", birthdays);
