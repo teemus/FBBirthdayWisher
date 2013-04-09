@@ -52,11 +52,13 @@ FBBirthdayWisher.getBirthdays = function() {
     }
 	var firstNames = [];
 	var idx = 0;
-	for (var i = 2; i < bdFriends.length; i+=2) {
-		firstNames[idx] = bdFriends[i].innerHTML.split(" ")[0];
-		idx++;
+	for (var i = 2; i < bdFriends.length; i++) {
+		if ((bdFriends[i].attributes["ajaxify"] == undefined) && (bdFriends[i].attributes["class"] == undefined)) {
+			firstNames[idx] = bdFriends[i].innerHTML.split(" ")[0];
+			idx++;
+		}	
 	}
-
+	
 	return {
 		"firstNames" : firstNames,
 		"profileIDs": data.walltarget || [],
