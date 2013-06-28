@@ -8,22 +8,12 @@ FBBirthdayWisher.getFields = function () {
 					"xhpc_composerid" : 1,
 					"xhpc_context" : 1,
 					"xhpc_ismeta" : 1,
-					"xhpc_fbx" : 1,
-					"walltarget" : 2,
 				 };
 	var data = {};
 	var iF = document.getElementsByTagName("input");
-    var idx = 0;
 	for (var i=0; i < iF.length; i++) {
 		if ((iF[i].type == "hidden") && (fields[iF[i].name] == 1)) {
 			data[iF[i].name] = iF[i].value;
-		}
-		if ((iF[i].type == "hidden") && (fields[iF[i].name] == 2)) {
-			if (!data[iF[i].name]) {
-				data[iF[i].name] = [];
-			}
-			data[iF[i].name][idx] = iF[i].value;
-			idx++;
 		}
 	}
 	data.xhpc_timeline = 1;
@@ -42,32 +32,33 @@ FBBirthdayWisher.buildPostData = function (data) {
 };
 
 FBBirthdayWisher.getBirthdays = function() {
-	var data = FBBirthdayWisher.getFields();
-	var fbRemindersContent = document.getElementsByClassName("fbRemindersContent");
-    var bdFriends = [];
-    if (fbRemindersContent.length == 1) {
-        bdFriends = fbRemindersContent[0].getElementsByTagName("a");
-    } else {
-        bdFriends = fbRemindersContent[1].getElementsByTagName("a");
-    }
-	var firstNames = [];
-	var idx = 0;
-	for (var i = 2; i < bdFriends.length; i++) {
-		if ((bdFriends[i].attributes["ajaxify"] == undefined) && (bdFriends[i].attributes["class"] == undefined)) {
-			firstNames[idx] = bdFriends[i].innerHTML.split(" ")[0];
-			idx++;
-		}	
-	}
+	var data = FBBirthdayWisher.getFields(),
+		firstNames = [],
+		profileIDs = [];
+	var birthdaysList = document.getElementsByClassName("uiList fbRemindersBirthdayList")[0];
+	if (birthdaysList) {
+		var birthdays = birthdaysList.getElementsByClassName("fwb");
+		if (birthdays) {
+			for (var i=0; i < birthdays.length; i++) {
+				var birthday = birthdays[i].getElementsByTagName("a");
+				if (birthday) {
+					var name = birthday[0].innerHTML;
+					firstNames[i] = name.split(" ")[0];
+					var bData = JSON.parse(birthday[0].getAttribute("data-gt"));
+					profileIDs[i] = bData.engagement.eng_tid;
+				}	
+			}
+		}
+	}	
 	
 	return {
 		"firstNames" : firstNames,
-		"profileIDs": data.walltarget || [],
+		"profileIDs": profileIDs,
 		"fields": {
 			"fb_dtsg" : data.fb_dtsg,
 			"xhpc_composerid" : data.xhpc_composerid,
 			"xhpc_context" : data.xhpc_context,
 			"xhpc_ismeta" : data.xhpc_ismeta,
-			"xhpc_fbx" : data.xhpc_fbx,
 			"xhpc_timeline" : data.xhpc_timeline	
 		}
 	};
